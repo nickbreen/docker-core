@@ -1,0 +1,10 @@
+version: '2'
+services:
+  core:
+    image: nickbreen/core
+    build: .
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+
+      
