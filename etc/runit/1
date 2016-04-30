@@ -1,0 +1,24 @@
+#!/bin/sh
+exec 2>&1
+
+set -e
+
+PATH=/command:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Generate the environment files
+for E in `env --null | sed --null-data s/=.*// | tr "\000" "\n"`
+do
+  case $E in
+  HOME|USER|GROUP|UID|GID|SHELL) ;;
+  *)
+    eval "echo -n \"\$$E\"" > /etc/container_environment/$E
+  ;;
+  esac
+done
+
+# Execute rc.local if present and executable
+[ -f /etc/rc.local -a -x /etc/rc.local ] && /etc/rc.local
+
+# The doc'd scripts do this, so let's do it too, it looks important
+touch /etc/runit/stopit
+chmod 0 /etc/runit/stopit

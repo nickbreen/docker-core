@@ -3,8 +3,9 @@ services:
   core:
     image: nickbreen/core
     build: .
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-
-
-      
+    environment:
+      CRON_D_REBOOT: |
+        @reboot root echo Hello Reboot!; touch /.reboot | logger --tag hello-reboot
+      CRON_D_HELLO: |
+        * * * * * root echo Hello World! | logger --tag hello
+        */5 * * * * root echo Hello World! | logger --tag hello/5

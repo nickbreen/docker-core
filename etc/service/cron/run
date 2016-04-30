@@ -1,0 +1,15 @@
+#!/bin/sh
+exec 2>&1
+
+set -e
+
+# Wait for syslog
+/usr/bin/sv check syslog
+
+# For any environment variable named CRON_D_*, turn it into a cron job.
+for C in /etc/container_environment/CRON_D_*; do ln -sf $C /etc/cron.d/; done
+
+# Print out all the valid jobs.
+run-parts --test /etc/cron.d
+
+exec cron -f -L 15
