@@ -38,13 +38,13 @@ RUN dpkg-divert --local --rename --add /sbin/init && ln -sf /sbin/runit-init /sb
 # Install crond and syslogd
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends cron rsyslog && apt-get clean
 
-# Do we really care about the locale? Not really.
-RUN locale-gen en_NZ.UTF-8 && update-locale LANG=en_NZ.UTF-8 LC_CTYPE=en_NZ.UTF-8 && locale
-RUN echo -n en_NZ.UTF-8 > /etc/container_environment/LANG
-RUN echo -n en_NZ.UTF-8 > /etc/container_environment/LC_CTYPE
-
 # Add phusion/baseimage-docker compatible container_environment, except for JSON
 # Add default system services
 COPY etc /etc
+
+# Do we really care about the locale? Not really, but let's go Kiwi anyway.
+RUN locale-gen en_NZ.UTF-8 && update-locale LANG=en_NZ.UTF-8 LC_CTYPE=en_NZ.UTF-8
+RUN echo -n en_NZ.UTF-8 > /etc/container_environment/LANG
+RUN echo -n en_NZ.UTF-8 > /etc/container_environment/LC_CTYPE
 
 CMD [ "/sbin/init" ]
